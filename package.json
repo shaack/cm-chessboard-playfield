@@ -2,7 +2,8 @@
   "name": "cm-chessboard-chess-rules",
   "version": "1.0.0",
   "description": "A cm-chessboard plugin to validate moves and support promotions",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/cm-chessboard-chess-game/ChessGame.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/shaack/cm-chessboard-chess-rules/issues"
   },
-  "homepage": "https://github.com/shaack/cm-chessboard-chess-rules#readme"
+  "homepage": "https://github.com/shaack/cm-chessboard-chess-rules#readme",
+  "dependencies": {
+    "cm-chess": "^3.0.1",
+    "cm-chessboard": "^7.4.1",
+    "cm-web-modules": "^2.0.0",
+    "node-modules-url": "^1.0.3"
+  }
 }
