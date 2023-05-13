@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example of the ChessGame plugin for cm-chessboard</title>
+</head>
+<body>
+<h1>The ChessGame plugin for cm-chessboard</h1>
+<div id="chessboard"></div>
+<script type="module" src="./node_modules/node-modules-url/node-modules-url.js"></script>
+<script type="module">
+    import {Chessboard} from "./node_modules/cm-chessboard/src/Chessboard.js"
+    import {ChessGame} from "./src/cm-chessboard-chess-game/ChessGame.js"
+
+    const chessboard = new Chessboard(document.getElementById("chessboard"), {
+        position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+        plugins: [
+            {
+                class: ChessGame, props: {
+
+                }
+            }
+        ]
+    })
+
+</script>
+</body>
+</html>
