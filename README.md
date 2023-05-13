@@ -1,2 +1,2 @@
 # cm-chessboard-chess-rules
-A cm-chessboard plugin to validate moves and support promotions
+A cm-chessboard extension to validate moves and support promotions
