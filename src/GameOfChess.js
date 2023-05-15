@@ -10,11 +10,10 @@ const {COLOR} = await import(nodeModulesUrl + "cm-chessboard/src/Chessboard.js")
 const {Extension} = await import(nodeModulesUrl + "cm-chessboard/src/model/Extension.js")
 const {Observed} = await import(nodeModulesUrl + "cm-web-modules/src/observed/Observed.js")
 
-export class ChessGame extends Extension {
+export class GameOfChess extends Extension {
     constructor(chessboard, props = {}) {
         super(chessboard)
         this.props = {
-            orientation: COLOR.white
         }
         this.state = new Observed({
             chess: new Chess()

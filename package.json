@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A cm-chessboard plugin to validate moves and support promotions",
   "type": "module",
-  "main": "src/cm-chessboard-chess-game/ChessGame.js",
+  "main": "src/cm-chessboard-game-of-chess/GameOfChess.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
