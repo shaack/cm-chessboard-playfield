@@ -1,33 +1,29 @@
 {
-  "name": "cm-chessboard-chess-rules",
+  "name": "cm-chessboard-game-of-chess",
   "version": "1.0.0",
-  "description": "A cm-chessboard plugin to validate moves and support promotions",
-  "type": "module",
-  "main": "src/cm-chessboard-game-of-chess/GameOfChess.js",
+  "description": "A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square marking.",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shaack/cm-chessboard-chess-rules.git"
+    "url": "git+https://github.com/shaack/cm-chessboard-game-of-chess.git"
   },
   "keywords": [
-    "chess",
+    "es6",
     "cm-chessboard",
-    "plugin",
-    "js",
-    "es6"
+    "chess"
   ],
   "author": "shaack.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shaack/cm-chessboard-chess-rules/issues"
+    "url": "https://github.com/shaack/cm-chessboard-game-of-chess/issues"
   },
-  "homepage": "https://github.com/shaack/cm-chessboard-chess-rules#readme",
+  "homepage": "https://github.com/shaack/cm-chessboard-game-of-chess#readme",
   "dependencies": {
     "cm-chess": "^3.0.1",
-    "cm-chessboard": "^7.4.1",
-    "cm-web-modules": "^2.0.0",
+    "cm-chessboard": "^7.4.2",
     "node-modules-url": "^1.0.3"
   }
 }

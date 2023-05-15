@@ -1,7 +1,6 @@
 # cm-chessboard-chess
 
-A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square
-marking.
+A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square marking.
 
 ## API
 
