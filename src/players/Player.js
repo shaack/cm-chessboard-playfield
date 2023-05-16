@@ -6,8 +6,11 @@
 
 export class Player {
 
-    constructor(gameOfChess, name) {
-        this.gameOfChess = gameOfChess
+    constructor(playfield, name) {
+        if (new.target === Player) {
+            throw new TypeError("Player is an abstract class, it can't be instantiated directly.")
+        }
+        this.playfield = playfield
         this.name = name
     }
 

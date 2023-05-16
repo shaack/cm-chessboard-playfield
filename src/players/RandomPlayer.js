@@ -4,10 +4,10 @@
  * License: MIT, see file 'LICENSE'
  */
 
-const {Chess} = await import(nodeModulesUrl + "chess.mjs/src/Chess.js")
-import {ChessConsolePlayer} from "../ChessConsolePlayer.js"
+const {Chess} = await import(`${node_modules}/chess.mjs/src/Chess.js`)
+import {Player} from "./Player.js"
 
-export class RandomPlayer extends ChessConsolePlayer {
+export class RandomPlayer extends Player {
 
     constructor(chessConsole, name, props = {}) {
         super(chessConsole, name)

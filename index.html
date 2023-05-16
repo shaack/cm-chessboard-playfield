@@ -5,18 +5,20 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./node_modules/cm-chessboard/assets/chessboard.css"/>
     <title>Example of the Playfield plugin for cm-chessboard</title>
 </head>
 <body>
 <h1>The Playfield plugin for cm-chessboard</h1>
 <div id="chessboard"></div>
-<script type="module" src="./node_modules/node-modules-url/node-modules-url.js"></script>
+<script type="module" src="./node_modules/import-node-modules/index.js"></script>
 <script type="module">
     import {Chessboard} from "./node_modules/cm-chessboard/src/Chessboard.js"
     import {Playfield} from "./src/Playfield.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
         position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+        assetsUrl: "node_modules/cm-chessboard/assets/",
         plugins: [
             {
                 class: Playfield, props: {}

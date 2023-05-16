@@ -1,25 +1,24 @@
-import {PromotionDialog} from "cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js"
-
 /**
  * Author and copyright: Stefan Haack (https://shaack.com)
  * Repository: https://github.com/shaack/chess-console
  * License: MIT, see file 'LICENSE'
  */
-const {COLOR, INPUT_EVENT_TYPE} = await import(nodeModulesUrl + "cm-chessboard/src/Chessboard.js")
-const {Chess} = await import(nodeModulesUrl + "chess.mjs/src/Chess.js")
-import {Player} from "../Player.js"
+const {COLOR, INPUT_EVENT_TYPE} = await import(`${node_modules}/cm-chessboard/src/Chessboard.js`)
+const {Chess} = await import(`${node_modules}/chess.mjs/src/Chess.js`)
+const {PromotionDialog} = await import(`${node_modules}/cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js`)
+import {Player} from "./Player.js"
 
 export class LocalPlayer extends Player {
 
-    constructor(gameOfChess, name, props) {
-        super(gameOfChess, name)
+    constructor(playfield, name, props) {
+        super(playfield, name)
         this.props = {
             allowPremoves: false
         }
         Object.assign(this.props, props)
         this.premoves = []
-        if (!this.gameOfChess.chessboard.hasExtension(PromotionDialog)) {
-            this.gameOfChess.chessboard.addExtension(PromotionDialog)
+        if (!this.playfield.chessboard.hasExtension(PromotionDialog)) {
+            this.playfield.chessboard.addExtension(PromotionDialog)
         }
     }
 
@@ -39,7 +38,7 @@ export class LocalPlayer extends Player {
                 const possibleMoves = tmpChess.moves({square: squareFrom, verbose: true})
                 for (let possibleMove of possibleMoves) {
                     if (possibleMove.to === squareTo && possibleMove.promotion) {
-                        this.gameOfChess.chessboard.showPromotionDialog(squareTo, tmpChess.turn(), (event) => {
+                        this.playfield.chessboard.showPromotionDialog(squareTo, tmpChess.turn(), (event) => {
                             if (event.piece) {
                                 move.promotion = event.piece.charAt(1)
                                 callback(tmpChess.move(move))
@@ -71,7 +70,7 @@ export class LocalPlayer extends Player {
         // if player can make move, make, if not store as premove
         // const boardFen = this.chessConsole.components.board.chessboard.getPosition()
         const gameFen = this.chessboard.chess.fen()
-        if (this.gameOfChess.playerToMove() === this) {
+        if (this.playfield.playerToMove() === this) {
             if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
                 return this.validateMoveAndPromote(gameFen, event.squareFrom, event.squareTo, (moveResult) => {
                     let result
