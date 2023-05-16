@@ -11,7 +11,7 @@ const {MARKER_TYPE} = await import(nodeModulesUrl + "cm-chessboard/src/extension
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
 
-export class GameOfChess extends Extension {
+export class Playfield extends Extension {
     constructor(chessboard, props = {}) {
         super(chessboard)
         this.props = {
@@ -42,5 +42,8 @@ export class GameOfChess extends Extension {
         this.registerMethod("chess", () => {
             return this.state.chess
         })
+    }
+    playerToMove() {
+        return this.state.chess.turn() === this.props.playerColor ? this.props.player : this.props.opponent
     }
 }

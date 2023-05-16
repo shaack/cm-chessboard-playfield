@@ -1,3 +1,5 @@
+import {PromotionDialog} from "cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js"
+
 /**
  * Author and copyright: Stefan Haack (https://shaack.com)
  * Repository: https://github.com/shaack/chess-console
@@ -5,16 +7,20 @@
  */
 const {COLOR, INPUT_EVENT_TYPE} = await import(nodeModulesUrl + "cm-chessboard/src/Chessboard.js")
 const {Chess} = await import(nodeModulesUrl + "chess.mjs/src/Chess.js")
+import {Player} from "../Player.js"
 
-export class LocalPlayer extends ChessConsolePlayer {
+export class LocalPlayer extends Player {
 
-    constructor(chessConsole, name, props) {
-        super(chessConsole, name)
+    constructor(gameOfChess, name, props) {
+        super(gameOfChess, name)
         this.props = {
             allowPremoves: false
         }
         Object.assign(this.props, props)
         this.premoves = []
+        if (!this.gameOfChess.chessboard.hasExtension(PromotionDialog)) {
+            this.gameOfChess.chessboard.addExtension(PromotionDialog)
+        }
     }
 
     /**
@@ -33,11 +39,9 @@ export class LocalPlayer extends ChessConsolePlayer {
                 const possibleMoves = tmpChess.moves({square: squareFrom, verbose: true})
                 for (let possibleMove of possibleMoves) {
                     if (possibleMove.to === squareTo && possibleMove.promotion) {
-                        const chessboard = this.chessConsole.components.board.chessboard
-                        chessboard.showPromotionDialog(squareTo, tmpChess.turn(), (event) => {
+                        this.gameOfChess.chessboard.showPromotionDialog(squareTo, tmpChess.turn(), (event) => {
                             if (event.piece) {
                                 move.promotion = event.piece.charAt(1)
-                                console.log(move)
                                 callback(tmpChess.move(move))
                             } else {
                                 callback(null)
@@ -66,8 +70,8 @@ export class LocalPlayer extends ChessConsolePlayer {
     chessboardMoveInputCallback(event, moveResponse) {
         // if player can make move, make, if not store as premove
         // const boardFen = this.chessConsole.components.board.chessboard.getPosition()
-        const gameFen = this.chessConsole.state.chess.fen()
-        if (this.chessConsole.playerToMove() === this) {
+        const gameFen = this.chessboard.chess.fen()
+        if (this.gameOfChess.playerToMove() === this) {
             if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
                 return this.validateMoveAndPromote(gameFen, event.squareFrom, event.squareTo, (moveResult) => {
                     let result
@@ -79,8 +83,8 @@ export class LocalPlayer extends ChessConsolePlayer {
                         this.updatePremoveMarkers()
                     }
                     if (result) {
-                        if(!this.props.allowPremoves) {
-                            this.chessConsole.components.board.chessboard.disableMoveInput()
+                        if (!this.props.allowPremoves) {
+                            this.chessboard.disableMoveInput()
                         }
                     }
                 })
@@ -90,7 +94,7 @@ export class LocalPlayer extends ChessConsolePlayer {
                     return false
                 } else {
                     const possibleMoves = this.chessConsole.state.chess.moves({square: event.square})
-                    if(possibleMoves.length > 0) {
+                    if (possibleMoves.length > 0) {
                         return true
                     } else {
                         this.chessConsole.components.board.chessConsole.messageBroker.publish(CONSOLE_MESSAGE_TOPICS.illegalMove, {
@@ -113,10 +117,10 @@ export class LocalPlayer extends ChessConsolePlayer {
     }
 
     moveRequest(fen, moveResponse) {
-        if(!this.contextMenuEvent) {
+        if (!this.contextMenuEvent) {
             this.chessConsole.components.board.chessboard.context.addEventListener("contextmenu", (event) => {
                 event.preventDefault()
-                if(this.premoves.length > 0) {
+                if (this.premoves.length > 0) {
                     this.resetBoardPosition()
                     this.premoves = []
                     this.updatePremoveMarkers()

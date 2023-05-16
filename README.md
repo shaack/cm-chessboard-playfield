@@ -1,6 +1,8 @@
-# cm-chessboard-chess
+# cm-chessboard-playfield
 
-A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square marking.
+
+
+A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and does some fancy square marking. This is the cm-chessboard which has it all to play chess.
 
 ## API
 

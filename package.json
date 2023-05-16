@@ -23,7 +23,7 @@
   "homepage": "https://github.com/shaack/cm-chessboard-game-of-chess#readme",
   "dependencies": {
     "cm-chess": "^3.0.1",
-    "cm-chessboard": "^7.4.2",
+    "cm-chessboard": "^7.4.3",
     "node-modules-url": "^1.0.3"
   }
 }
