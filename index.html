@@ -11,7 +11,17 @@
 <body>
 <h1>The Playfield extension for cm-chessboard</h1>
 <div id="chessboard"></div>
-<script type="module" src="./node_modules/import-node-modules/index.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "cm-chessboard/": "./node_modules/cm-chessboard/",
+            "cm-chess/": "./node_modules/cm-chess/",
+            "cm-pgn/": "./node_modules/cm-pgn/",
+            "chess.mjs/": "./node_modules/chess.mjs/",
+            "cm-web-modules/": "./node_modules/cm-web-modules/"
+        }
+    }
+</script>
 <script type="module">
     import {Chessboard} from "./node_modules/cm-chessboard/src/Chessboard.js"
     import {Playfield} from "./src/Playfield.js"

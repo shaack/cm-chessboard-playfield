@@ -3,7 +3,7 @@
  * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-const {Chess} = await import(`${node_modules}/chess.mjs/src/Chess.js`)
+import {Chess} from "cm-chess/src/Chess.js"
 import {PlayfieldPlayer} from "../PlayfieldPlayer.js"
 
 export class RandomPlayer extends PlayfieldPlayer {

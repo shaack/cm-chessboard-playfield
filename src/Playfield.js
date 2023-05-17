@@ -3,12 +3,13 @@
  * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-const {Fen} = await import(`${node_modules}/cm-chess/src/Fen.js`)
-const {Chess} = await import(`${node_modules}/cm-chess/src/Chess.js`)
-const {COLOR} = await import(`${node_modules}/cm-chessboard/src/Chessboard.js`)
-const {Extension} = await import(`${node_modules}/cm-chessboard/src/model/Extension.js`)
-const {Observed} = await import(`${node_modules}/cm-web-modules/src/observed/Observed.js`)
-const {MARKER_TYPE} = await import(`${node_modules}/cm-chessboard/src/extensions/markers/Markers.js`)
+
+import {Fen} from "cm-chess/src/Fen.js"
+import {Chess} from "cm-chess/src/Chess.js"
+import {COLOR} from "cm-chessboard/src/Chessboard.js"
+import {Extension} from "cm-chessboard/src/model/Extension.js"
+import {MARKER_TYPE} from "cm-chessboard/src/extensions/markers/Markers.js"
+import {Observed} from "cm-web-modules/src/observed/Observed.js"
 import {PlayfieldMarkers} from "./PlayfieldMarkers.js"
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
@@ -53,7 +54,8 @@ export class Playfield extends Extension {
         })
         this.state.addObserver(() => {
             const fenOfMoveShown = new Fen(this.state.moveShown.fen)
-            if (this.chessboard.getPosition() !== fenOfMoveShown.position) {
+            console.log(this.chessboard.getPosition(), fenOfMoveShown.position)
+            if (this.chessboard.getPosition() !== this.state.moveShown.position) {
                 this.chessboard.setPosition(this.state.moveShown.fen, true)
             }
         }, ["moveShown"])
