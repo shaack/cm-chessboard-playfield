@@ -3,7 +3,6 @@
  * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-import {Fen} from "cm-chess/src/Fen.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {COLOR} from "cm-chessboard/src/Chessboard.js"
 import {Extension} from "cm-chessboard/src/model/Extension.js"
@@ -52,11 +51,7 @@ export class Playfield extends Extension {
         this.state.chess.addObserver(() => {
         })
         this.state.addObserver(() => {
-            const fenOfMoveShown = new Fen(this.state.moveShown.fen)
-            console.log(this.chessboard.getPosition(), fenOfMoveShown.position)
-            if (this.chessboard.getPosition() !== this.state.moveShown.position) {
-                this.chessboard.setPosition(this.state.moveShown.fen, true)
-            }
+            this.chessboard.setPosition(this.state.moveShown.fen, true)
         }, ["moveShown"])
         this.nextMove()
     }
@@ -73,6 +68,7 @@ export class Playfield extends Extension {
     }
 
     handleMoveResponse(move) {
+        // console.log("handleMoveResponse", move)
         const moveResult = this.state.chess.move(move)
         if (!moveResult) {
             if (this.props.debug) {

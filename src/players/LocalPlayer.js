@@ -3,7 +3,7 @@
  * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-import {COLOR, INPUT_EVENT_TYPE} from "cm-chessboard/src/Chessboard.js"
+import {INPUT_EVENT_TYPE} from "cm-chessboard/src/Chessboard.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {PromotionDialog} from "cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js"
 import {PlayfieldPlayer} from "../PlayfieldPlayer.js"
@@ -14,7 +14,7 @@ export class LocalPlayer extends PlayfieldPlayer {
         super(playfield, name)
         this.props = {}
         Object.assign(this.props, props)
-        if (!this.playfield.chessboard.hasExtension(PromotionDialog)) {
+        if (!this.playfield.chessboard.getExtension(PromotionDialog)) {
             this.playfield.chessboard.addExtension(PromotionDialog)
         }
     }
@@ -30,27 +30,31 @@ export class LocalPlayer extends PlayfieldPlayer {
     }
 
     chessboardMoveInputCallback(event, moveResponse) {
+        // console.log("chessboardMoveInputCallback", event)
         switch (event.type) {
             case INPUT_EVENT_TYPE.moveInputStarted:
-                return true;
+                return true
             case INPUT_EVENT_TYPE.validateMoveInput:
-                const result = this.onValidateMoveInput(event, moveResponse);
-                if(result) {
-                    this.playfield.chessboard.disableMoveInput()
-                }
-                return result
+                return this.onValidateMoveInput(event)
+            case INPUT_EVENT_TYPE.moveInputFinished:
+                this.onMoveInputFinished(event, moveResponse)
         }
     }
 
-    onValidateMoveInput(event, moveResponse) {
-        console.log("onValidateMoveInput", event)
+    onValidateMoveInput(event) {
         const tmpChess = new Chess(this.playfield.state.chess.fen())
-        let move = {from: event.squareFrom, to: event.squareTo}
-        const moveResult = tmpChess.move(move)
-        if (moveResult) {
-            return true
-        }
+        return !!tmpChess.move({from: event.squareFrom, to: event.squareTo})
     }
 
+    onMoveInputFinished(event, moveResponse) {
+        console.log("onMoveInputFinished", event)
+        if (event.legalMove) {
+            this.playfield.chessboard.disableMoveInput()
+            moveResponse({
+                from: event.squareFrom,
+                to: event.squareTo
+            })
+        }
+    }
 
 }
