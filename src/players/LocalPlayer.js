@@ -33,12 +33,18 @@ export class LocalPlayer extends PlayfieldPlayer {
         // console.log("chessboardMoveInputCallback", event)
         switch (event.type) {
             case INPUT_EVENT_TYPE.moveInputStarted:
-                return true
+                return this.onMoveInputStarted(event)
             case INPUT_EVENT_TYPE.validateMoveInput:
                 return this.onValidateMoveInput(event)
             case INPUT_EVENT_TYPE.moveInputFinished:
                 this.onMoveInputFinished(event, moveResponse)
         }
+    }
+
+    onMoveInputStarted(event) {
+        const tmpChess = new Chess(this.playfield.state.chess.fen())
+        const moves = tmpChess.moves({square: event.squareFrom})
+        return moves.length > 0
     }
 
     onValidateMoveInput(event) {
