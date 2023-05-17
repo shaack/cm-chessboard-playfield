@@ -3,7 +3,6 @@
  * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-
 import {Fen} from "cm-chess/src/Fen.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {COLOR} from "cm-chessboard/src/Chessboard.js"
