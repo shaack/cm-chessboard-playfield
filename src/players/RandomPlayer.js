@@ -4,7 +4,7 @@
  * License: MIT, see file 'LICENSE'
  */
 import {Chess} from "cm-chess/src/Chess.js"
-import {PlayfieldPlayer} from "../PlayfieldPlayer.js"
+import {PlayfieldPlayer} from "./PlayfieldPlayer.js"
 
 export class RandomPlayer extends PlayfieldPlayer {
 

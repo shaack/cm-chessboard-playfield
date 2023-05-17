@@ -24,14 +24,14 @@
     }
 </script>
 <script type="module">
-    import {Chessboard} from "./node_modules/cm-chessboard/src/Chessboard.js"
+    import {Chessboard, FEN} from "cm-chessboard/src/Chessboard.js"
     import {Playfield} from "./src/Playfield.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
-        position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+        position: FEN.start,
         assetsUrl: "node_modules/cm-chessboard/assets/",
         style: {
-            animationDuration: 1000
+            animationDuration: 300
         },
         extensions: [
             {

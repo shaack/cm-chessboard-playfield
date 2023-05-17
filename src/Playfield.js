@@ -8,9 +8,19 @@ import {COLOR} from "cm-chessboard/src/Chessboard.js"
 import {Extension} from "cm-chessboard/src/model/Extension.js"
 import {MARKER_TYPE} from "cm-chessboard/src/extensions/markers/Markers.js"
 import {Observed} from "cm-web-modules/src/observed/Observed.js"
-import {PlayfieldMarkers} from "./PlayfieldMarkers.js"
+import {MessageBroker} from "cm-web-modules/src/message-broker/MessageBroker.js"
+import {PlayfieldMarkers} from "./extensions/PlayfieldMarkers.js"
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
+
+// Signals are for markers and sounds, they should not be used for business logic
+export const PLAYFIELD_SIGNALS = {
+    gameInit: "game/init",
+    gameOver: "game/over",
+    gameMovelegal: "game/move/legal",
+    gameMoveIllegal: "game/move/illegal",
+    gameMoveUndone: "game/move/undone"
+}
 
 export class Playfield extends Extension {
 
@@ -44,12 +54,8 @@ export class Playfield extends Extension {
         })
         Object.assign(this.props, props)
         this.chessboard.addExtension(PlayfieldMarkers, this.props.markers)
-
-        this.registerMethod("chess", () => {
-            return this.state.chess
-        })
-        this.state.chess.addObserver(() => {
-        })
+        this.chessboard.messageBroker = new MessageBroker()
+        this.chessboard.state.chess = this.state.chess
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)
         }, ["moveShown"])

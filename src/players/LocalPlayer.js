@@ -6,7 +6,7 @@
 import {INPUT_EVENT_TYPE} from "cm-chessboard/src/Chessboard.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {PromotionDialog} from "cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js"
-import {PlayfieldPlayer} from "../PlayfieldPlayer.js"
+import {PlayfieldPlayer} from "./PlayfieldPlayer.js"
 
 export class LocalPlayer extends PlayfieldPlayer {
 
@@ -53,7 +53,7 @@ export class LocalPlayer extends PlayfieldPlayer {
     }
 
     onMoveInputFinished(event, moveResponse) {
-        console.log("onMoveInputFinished", event)
+        // console.log("onMoveInputFinished", event)
         if (event.legalMove) {
             this.playfield.chessboard.disableMoveInput()
             moveResponse({
