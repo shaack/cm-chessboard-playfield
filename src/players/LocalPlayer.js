@@ -6,9 +6,9 @@
 const {COLOR, INPUT_EVENT_TYPE} = await import(`${node_modules}/cm-chessboard/src/Chessboard.js`)
 const {Chess} = await import(`${node_modules}/chess.mjs/src/Chess.js`)
 const {PromotionDialog} = await import(`${node_modules}/cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js`)
-import {Player} from "../Player.js"
+import {PlayfieldPlayer} from "../PlayfieldPlayer.js"
 
-export class LocalPlayer extends Player {
+export class LocalPlayer extends PlayfieldPlayer {
 
     constructor(playfield, name, props) {
         super(playfield, name)
@@ -23,9 +23,55 @@ export class LocalPlayer extends Player {
     }
 
     /**
-     * The return value returns, if valid or if is promotion.
-     * The callback returns the move.
+     * Called by the playfield, when it is the players turn
+     * @param moveResponse
      */
+    moveRequest(moveResponse) {
+        const color = this.playfield.state.chess.turn() === 'w' ? COLOR.white : COLOR.black
+        if (!this.playfield.state.chess.gameOver()) {
+            this.playfield.chessboard.enableMoveInput(
+                (event) => {
+                    return this.chessboardMoveInputCallback(event, moveResponse)
+                }, color
+            )
+        }
+    }
+
+    chessboardMoveInputCallback(event, moveResponse) {
+        const gameFen = this.playfield.state.chess.fen()
+        if (this.playfield.playerToMove() === this) {
+            if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
+                this.validateMoveAndPromote(gameFen, event.squareFrom, event.squareTo, (moveResult) => {
+                    let result
+                    if (moveResult) { // valid
+                        result = moveResponse(moveResult)
+                    } else { // not valid
+                        result = moveResponse({from: event.squareFrom, to: event.squareTo})
+                        this.premoves = []
+                    }
+                    if(result) {
+                        this.playfield.chessboard.disableMoveInput()
+                    }
+                })
+            } else if (event.type === INPUT_EVENT_TYPE.moveInputStarted) {
+                // reset position, if not on last move
+                if (this.playfield.state.moveShown !== this.playfield.state.chess.lastMove()) {
+                    this.playfield.state.moveShown = this.playfield.state.chess.lastMove()
+                    return false
+                }
+                return true
+            }
+        } else {
+            // premoves
+            if(this.props.allowPremoves) {
+                if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
+                    this.premoves.push(event)
+                }
+            }
+            return true
+        }
+    }
+
     validateMoveAndPromote(fen, squareFrom, squareTo, callback) {
         const tmpChess = new Chess(fen)
         let move = {from: squareFrom, to: squareTo}
@@ -50,66 +96,6 @@ export class LocalPlayer extends Player {
             }
         }
         callback(null)
-    }
-
-    /**
-     * Handles the events from cm-chessboard
-     *
-     * INPUT_EVENT_TYPE.moveDone
-     * - validates Move, returns false, if not valid
-     * - does promotion
-     * - calls moveResponse()
-     *
-     * INPUT_EVENT_TYPE.moveStart
-     * - allowed only the right color to move
-     */
-    chessboardMoveInputCallback(event, moveResponse) {
-        // if player can make move, make, if not store as premove
-        // const boardFen = this.chessConsole.components.board.chessboard.getPosition()
-        const gameFen = this.playfield.state.chess.fen()
-        if (this.playfield.playerToMove() === this) {
-            if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
-                this.validateMoveAndPromote(gameFen, event.squareFrom, event.squareTo, (moveResult) => {
-                    let result
-                    if (moveResult) { // valid
-                        result = moveResponse(moveResult)
-                    } else { // not valid
-                        result = moveResponse({from: event.squareFrom, to: event.squareTo})
-                        this.premoves = []
-                    }
-                    console.log("2b95bb result", moveResult)
-                    if(result) {
-                        console.log("08c961 disableMoveInput")
-                        this.playfield.chessboard.disableMoveInput()
-                    }
-                })
-            } else if (event.type === INPUT_EVENT_TYPE.moveInputStarted) {
-                // reset position, if not on last move
-                if (this.playfield.state.moveShown !== this.playfield.state.chess.lastMove()) {
-                    this.playfield.state.moveShown = this.playfield.state.chess.lastMove()
-                }
-            }
-        } else {
-            // premoves
-            if(this.props.allowPremoves) {
-                if (event.type === INPUT_EVENT_TYPE.validateMoveInput) {
-                    this.premoves.push(event)
-                }
-            }
-            return true
-        }
-    }
-
-    moveRequest(moveResponse) {
-        const color = this.playfield.state.chess.turn() === 'w' ? COLOR.white : COLOR.black
-        if (!this.playfield.state.chess.gameOver()) {
-            console.log("603a3a enableMoveInput")
-            this.playfield.chessboard.enableMoveInput(
-                (event) => {
-                    return this.chessboardMoveInputCallback(event, moveResponse)
-                }, color
-            )
-        }
     }
 
 }

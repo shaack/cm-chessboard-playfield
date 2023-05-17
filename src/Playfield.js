@@ -9,6 +9,7 @@ const {COLOR} = await import(`${node_modules}/cm-chessboard/src/Chessboard.js`)
 const {Extension} = await import(`${node_modules}/cm-chessboard/src/model/Extension.js`)
 const {Observed} = await import(`${node_modules}/cm-web-modules/src/observed/Observed.js`)
 const {MARKER_TYPE} = await import(`${node_modules}/cm-chessboard/src/extensions/markers/Markers.js`)
+import {PlayfieldMarkers} from "./PlayfieldMarkers.js"
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
 
@@ -43,6 +44,8 @@ export class Playfield extends Extension {
             opponent: new this.props.opponent.type(this, this.props.opponent.name)
         })
         Object.assign(this.props, props)
+        this.chessboard.addExtension(PlayfieldMarkers, this.props.markers)
+
         this.registerMethod("chess", () => {
             return this.state.chess
         })
@@ -64,11 +67,7 @@ export class Playfield extends Extension {
     nextMove() {
         const playerToMove = this.playerToMove()
         if (playerToMove) {
-            playerToMove.moveRequest((move) => {
-                setTimeout(() => {
-                    this.handleMoveResponse(move)
-                })
-            })
+            playerToMove.moveRequest(this.handleMoveResponse.bind(this))
         }
     }
 
@@ -81,9 +80,9 @@ export class Playfield extends Extension {
             }
             return moveResult
         }
-        // if (this.state.moveShown === this.state.chess.lastMove().previousMove) {
+        if (this.state.moveShown === this.state.chess.lastMove().previous) {
             this.state.moveShown = this.state.chess.lastMove()
-        // }
+        }
         if (!this.state.chess.gameOver()) {
             this.nextMove()
         }

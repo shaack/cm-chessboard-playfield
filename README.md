@@ -9,8 +9,8 @@ A cm-chessboard plugin which knows the rules of chess to validate moves, support
 ```
 this.props = {
     playerColor: COLOR.white,
-    player: {name: "Local Player", type: LocalPlayer},
-    opponent: {name: "Random Player", type: RandomPlayer},
+    player: {name: "Local PlayfieldPlayer", type: LocalPlayer},
+    opponent: {name: "Random PlayfieldPlayer", type: RandomPlayer},
     markers: {
         move: MARKER_TYPE.frame,
         lastMove: MARKER_TYPE.frame,
