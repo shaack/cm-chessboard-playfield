@@ -1,8 +1,9 @@
 /**
  * Author and copyright: Stefan Haack (https://shaack.com)
- * Repository: https://github.com/shaack/cm-chessboard
+ * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
+const {Fen} = await import(`${node_modules}/cm-chess/src/Fen.js`)
 const {Chess} = await import(`${node_modules}/cm-chess/src/Chess.js`)
 const {COLOR} = await import(`${node_modules}/cm-chessboard/src/Chessboard.js`)
 const {Extension} = await import(`${node_modules}/cm-chessboard/src/model/Extension.js`)
@@ -37,25 +38,35 @@ export class Playfield extends Extension {
         }
         this.state = new Observed({
             chess: new Chess(),
-            moveShown: null
+            moveShown: null,
+            player: new this.props.player.type(this, this.props.player.name),
+            opponent: new this.props.opponent.type(this, this.props.opponent.name)
         })
         Object.assign(this.props, props)
         this.registerMethod("chess", () => {
             return this.state.chess
         })
+        this.state.chess.addObserver(() => {
+        })
+        this.state.addObserver(() => {
+            const fenOfMoveShown = new Fen(this.state.moveShown.fen)
+            if (this.chessboard.getPosition() !== fenOfMoveShown.position) {
+                this.chessboard.setPosition(this.state.moveShown.fen, true)
+            }
+        }, ["moveShown"])
         this.nextMove()
     }
 
     playerToMove() {
-        return this.state.chess.turn() === this.props.playerColor ? this.props.player : this.props.opponent
+        return this.state.chess.turn() === this.props.playerColor ? this.state.player : this.state.opponent
     }
 
     nextMove() {
         const playerToMove = this.playerToMove()
         if (playerToMove) {
-            setTimeout(() => {
-                playerToMove.moveRequest(this.state.chess.fen(), (move) => {
-                    return this.handleMoveResponse(move)
+            playerToMove.moveRequest((move) => {
+                setTimeout(() => {
+                    this.handleMoveResponse(move)
                 })
             })
         }
@@ -65,13 +76,14 @@ export class Playfield extends Extension {
         const moveResult = this.state.chess.move(move)
         if (!moveResult) {
             if (this.props.debug) {
-                console.warn("illegalMove", this.state.chess, move)
+                console.error("illegalMove", this.state.chess, move)
+                throw Error("illegalMove")
             }
             return moveResult
         }
-        if (this.state.plyViewed === this.state.chess.plyCount() - 1) {
-            this.state.plyViewed++
-        }
+        // if (this.state.moveShown === this.state.chess.lastMove().previousMove) {
+            this.state.moveShown = this.state.chess.lastMove()
+        // }
         if (!this.state.chess.gameOver()) {
             this.nextMove()
         }

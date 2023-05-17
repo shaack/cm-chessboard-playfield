@@ -1,16 +1,15 @@
 /**
  * Author and copyright: Stefan Haack (https://shaack.com)
- * Repository: https://github.com/shaack/chess-console
+ * Repository: https://github.com/shaack/cm-chessboard-playfield
  * License: MIT, see file 'LICENSE'
  */
-
 const {Chess} = await import(`${node_modules}/chess.mjs/src/Chess.js`)
-import {Player} from "./Player.js"
+import {Player} from "../Player.js"
 
 export class RandomPlayer extends Player {
 
-    constructor(chessConsole, name, props = {}) {
-        super(chessConsole, name)
+    constructor(playfield, name, props = {}) {
+        super(playfield, name)
         this.chess = new Chess()
         this.props = {delay: 1000}
         Object.assign(this.props, props)
@@ -20,13 +19,13 @@ export class RandomPlayer extends Player {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
-    moveRequest(fen, moveResponse) {
+    moveRequest(moveResponse) {
         setTimeout(() => {
-            this.chess.load(fen)
+            this.chess.load(this.playfield.state.chess.fen())
             const possibleMoves = this.chess.moves({verbose: true})
             if (possibleMoves.length > 0) {
                 const randomMove = possibleMoves[this.random(0, possibleMoves.length - 1)]
-                moveResponse({from: randomMove.from, to: randomMove.to})
+                moveResponse(randomMove)
             }
         }, this.props.delay)
     }
