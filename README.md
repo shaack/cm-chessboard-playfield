@@ -5,11 +5,11 @@ A cm-chessboard plugin which knows the rules of chess to validate moves, support
 Work in progress, which is planned to
 
 - do move validation
+- keep track of the moves history
 - set markers for last move, check, invalid move, legal moves etc.
-- displays a promotion dialog if needed
-- keeps track of the moves history
-- allows premoves
-- add sounds
+- display a promotion dialog, if needed
+- allow premoves
+- add sounds 🥳
 
 This will replace many parts of my https://github.com/shaack/chess-console project and make it easier to use.
 
