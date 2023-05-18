@@ -73,13 +73,10 @@ export class Playfield extends Extension {
     }
 
     handleMoveResponse(move) {
-        // console.log("handleMoveResponse", move)
+        console.log("handleMoveResponse", move)
         const moveResult = this.state.chess.move(move)
         if (!moveResult) {
-            if (this.props.debug) {
-                console.error("illegalMove", this.state.chess, move)
-                throw Error("illegalMove")
-            }
+            console.error("illegalMove", this.state.chess, move)
             return moveResult
         }
         if (this.state.moveShown === this.state.chess.lastMove().previous) {
