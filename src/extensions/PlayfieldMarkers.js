@@ -5,6 +5,7 @@
  */
 import {Markers} from "cm-chessboard/src/extensions/markers/Markers.js"
 import {PLAYFIELD_MESSAGES} from "../Playfield.js"
+import {Chess} from "cm-chess/src/Chess.js"
 
 export class PlayfieldMarkers extends Markers {
     constructor(chessboard, props = {}) {
@@ -14,7 +15,7 @@ export class PlayfieldMarkers extends Markers {
         })
         props.playfield.state.addObserver((event) => {
            console.log("event", event)
-            this.markLastMove(event.value.from, event.value.to)
+            this.markLastMove(event.value)
         }, ["moveShown"])
     }
     markIllegalMove(from, to) {
@@ -29,9 +30,15 @@ export class PlayfieldMarkers extends Markers {
         }, 500)
     }
 
-    markLastMove(from, to) {
+    markLastMove(move) {
+        this.chessboard.removeMarkers(this.props.markers.check)
         this.chessboard.removeMarkers(this.props.markers.lastMove)
-        this.chessboard.addMarker(this.props.markers.lastMove, from)
-        this.chessboard.addMarker(this.props.markers.lastMove, to)
+        this.chessboard.addMarker(this.props.markers.lastMove, move.from)
+        this.chessboard.addMarker(this.props.markers.lastMove, move.to)
+        if (move.inCheck || move.inCheckmate) {
+            const tmpChess = new Chess(move.fen)
+            const kingSquare = tmpChess.pieces("k", tmpChess.turn())[0]
+            this.chessboard.addMarker(this.props.markers.check, kingSquare.square)
+        }
     }
 }
