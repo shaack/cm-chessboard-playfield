@@ -58,7 +58,8 @@ export class LocalPlayer extends PlayfieldPlayer {
         const validMove = !!tmpChess.move(move)
         if (validMove) {
             return true
-        } else { // is a promotion?
+        } else {
+            // is a promotion?
             const piece = tmpChess.piece(event.squareFrom)
             if (piece && piece.type === "p") {
                 const possibleMoves = tmpChess.moves({square: event.squareFrom, verbose: true})
@@ -77,6 +78,9 @@ export class LocalPlayer extends PlayfieldPlayer {
                     }
                 }
             }
+            // is not a promotion
+            this.playfield.messageBroker.publish(PLAYFIELD_MESSAGES.gameMoveIllegal,
+                {from: event.squareFrom, to: event.squareTo})
         }
     }
 

@@ -34,6 +34,7 @@ export class Playfield extends Extension {
                 lastMove: MARKER_TYPE.frame,
                 check: MARKER_TYPE.circleDanger,
                 checkMate: MARKER_TYPE.circleDanger,
+                illegalMove: MARKER_TYPE.frameDanger,
                 validMove: MARKER_TYPE.dot,
                 validMoveCapture: MARKER_TYPE.bevel
             },
@@ -53,7 +54,10 @@ export class Playfield extends Extension {
         })
         Object.assign(this.props, props)
         this.messageBroker = new MessageBroker()
-        this.chessboard.addExtension(PlayfieldMarkers, this.props.markers)
+        this.chessboard.addExtension(PlayfieldMarkers, {
+            messageBroker: this.messageBroker,
+            markers: this.props.markers
+        })
         this.chessboard.state.chess = this.state.chess
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)
