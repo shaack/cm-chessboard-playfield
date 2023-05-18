@@ -7,11 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./node_modules/cm-chessboard/assets/chessboard.css"/>
     <link rel="stylesheet" href="./node_modules/cm-chessboard/assets/extensions/markers/markers.css"/>
+    <link rel="stylesheet" href="./node_modules/cm-chessboard/assets/extensions/promotion-dialog/promotion-dialog.css"/>
     <title>Example of the Playfield plugin for cm-chessboard</title>
 </head>
 <body>
 <h1>The Playfield extension for cm-chessboard</h1>
 <div id="chessboard"></div>
+<script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.7.2/dist/es-module-shims.min.js"></script>
 <script type="importmap">
     {
         "imports": {
@@ -28,7 +30,7 @@
     import {Playfield} from "./src/Playfield.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
-        position: FEN.start,
+        position: "4k3/1P6/8/8/6r1/8/8/2R1K3 w - - 0 1",
         assetsUrl: "node_modules/cm-chessboard/assets/",
         style: {
             animationDuration: 300

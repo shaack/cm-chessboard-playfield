@@ -13,9 +13,8 @@ import {PlayfieldMarkers} from "./extensions/PlayfieldMarkers.js"
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
 
-// Signals are for markers and sounds, they should not be used for business logic
-export const PLAYFIELD_SIGNALS = {
-    gameInit: "game/init",
+export const PLAYFIELD_MESSAGES = {
+    // The messages are for mainly to decouple markers and sounds, they should not be used for business logic
     gameOver: "game/over",
     gameMovelegal: "game/move/legal",
     gameMoveIllegal: "game/move/illegal",
@@ -47,14 +46,14 @@ export class Playfield extends Extension {
             }
         }
         this.state = new Observed({
-            chess: new Chess(),
+            chess: new Chess(chessboard.props.position),
             moveShown: null,
             player: new this.props.player.type(this, this.props.player.name),
             opponent: new this.props.opponent.type(this, this.props.opponent.name)
         })
         Object.assign(this.props, props)
+        this.messageBroker = new MessageBroker()
         this.chessboard.addExtension(PlayfieldMarkers, this.props.markers)
-        this.chessboard.messageBroker = new MessageBroker()
         this.chessboard.state.chess = this.state.chess
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)

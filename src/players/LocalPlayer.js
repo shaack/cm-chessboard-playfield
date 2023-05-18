@@ -7,6 +7,7 @@ import {INPUT_EVENT_TYPE} from "cm-chessboard/src/Chessboard.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {PromotionDialog} from "cm-chessboard/src/extensions/promotion-dialog/PromotionDialog.js"
 import {PlayfieldPlayer} from "./PlayfieldPlayer.js"
+import {PLAYFIELD_MESSAGES} from "../Playfield.js"
 
 export class LocalPlayer extends PlayfieldPlayer {
 
@@ -35,31 +36,58 @@ export class LocalPlayer extends PlayfieldPlayer {
             case INPUT_EVENT_TYPE.moveInputStarted:
                 return this.onMoveInputStarted(event)
             case INPUT_EVENT_TYPE.validateMoveInput:
-                return this.onValidateMoveInput(event)
+                return this.onValidateMoveInput(event, moveResponse)
             case INPUT_EVENT_TYPE.moveInputFinished:
-                this.onMoveInputFinished(event, moveResponse)
+                this.onMoveInputFinished(event)
         }
     }
 
     onMoveInputStarted(event) {
         const tmpChess = new Chess(this.playfield.state.chess.fen())
         const moves = tmpChess.moves({square: event.squareFrom})
-        return moves.length > 0
+        const movesFound = moves.length > 0
+        if (!movesFound) {
+            this.playfield.messageBroker.publish(PLAYFIELD_MESSAGES.gameMoveIllegal, {from: event.squareFrom})
+        }
+        return movesFound
     }
 
-    onValidateMoveInput(event) {
+    onValidateMoveInput(event, moveResponse) {
         const tmpChess = new Chess(this.playfield.state.chess.fen())
-        return !!tmpChess.move({from: event.squareFrom, to: event.squareTo})
-    }
-
-    onMoveInputFinished(event, moveResponse) {
-        // console.log("onMoveInputFinished", event)
-        if (event.legalMove) {
-            this.playfield.chessboard.disableMoveInput()
+        const move = {from: event.squareFrom, to: event.squareTo}
+        const validMove = !!tmpChess.move(move)
+        if (validMove) {
             moveResponse({
                 from: event.squareFrom,
                 to: event.squareTo
             })
+            return true
+        } else { // is a promotion?
+            const piece = tmpChess.piece(event.squareFrom)
+            if (piece && piece.type === "p") {
+                const possibleMoves = tmpChess.moves({square: event.squareFrom, verbose: true})
+                for (let possibleMove of possibleMoves) {
+                    if (possibleMove.to === event.squareTo && possibleMove.promotion) {
+                        this.playfield.chessboard.showPromotionDialog(event.squareTo, tmpChess.turn(), (dialogEvent) => {
+                            if(!dialogEvent) {
+                                this.playfield.chessboard.setPosition(this.playfield.state.chess.fen(), true)
+                                this.moveRequest(moveResponse)
+                            } else if (dialogEvent.piece) {
+                                move.promotion = dialogEvent.piece.charAt(1)
+                                moveResponse(tmpChess.move(move))
+                            }
+                        })
+                        return true
+                    }
+                }
+            }
+        }
+    }
+
+    onMoveInputFinished(event) {
+        // console.log("onMoveInputFinished", event)
+        if (event.legalMove) {
+            this.playfield.chessboard.disableMoveInput()
         }
     }
 
