@@ -30,13 +30,13 @@ export class Playfield extends Extension {
             player: {name: "Local Player", type: LocalPlayer},
             opponent: {name: "Random Player", type: RandomPlayer},
             markers: {
-                move: MARKER_TYPE.frame,
-                lastMove: MARKER_TYPE.frame,
-                check: MARKER_TYPE.circleDanger,
-                checkMate: MARKER_TYPE.circleDanger,
-                illegalMove: MARKER_TYPE.frameDanger,
-                validMove: MARKER_TYPE.dot,
-                validMoveCapture: MARKER_TYPE.bevel
+                move: {...MARKER_TYPE.frame},
+                lastMove: {...MARKER_TYPE.frame},
+                check: {...MARKER_TYPE.circleDanger},
+                checkMate: {...MARKER_TYPE.circleDanger},
+                illegalMove: {...MARKER_TYPE.frameDanger},
+                validMove: {...MARKER_TYPE.dot},
+                validMoveCapture: {...MARKER_TYPE.bevel}
             },
             accessibility: {
                 brailleNotationInAlt: true,
@@ -77,7 +77,7 @@ export class Playfield extends Extension {
     }
 
     handleMoveResponse(move) {
-        console.log("handleMoveResponse", move)
+        // console.log("handleMoveResponse", move)
         const moveResult = this.state.chess.move(move)
         if (!moveResult) {
             console.error("illegalMove", this.state.chess, move)

@@ -6,6 +6,7 @@
 import {Markers} from "cm-chessboard/src/extensions/markers/Markers.js"
 import {PLAYFIELD_MESSAGES} from "../Playfield.js"
 import {Chess} from "cm-chess/src/Chess.js"
+import {EXTENSION_POINT} from "cm-chessboard/src/model/Extension.js"
 
 export class PlayfieldMarkers extends Markers {
     constructor(chessboard, props = {}) {
@@ -14,9 +15,9 @@ export class PlayfieldMarkers extends Markers {
             this.markIllegalMove(data.from, data.to)
         })
         props.playfield.state.addObserver((event) => {
-           console.log("event", event)
             this.markLastMove(event.value)
         }, ["moveShown"])
+        this.markLastMove(props.playfield.state.moveShown)
     }
     markIllegalMove(from, to) {
         this.chessboard.removeMarkers(this.props.markers.illegalMove)
@@ -33,12 +34,21 @@ export class PlayfieldMarkers extends Markers {
     markLastMove(move) {
         this.chessboard.removeMarkers(this.props.markers.check)
         this.chessboard.removeMarkers(this.props.markers.lastMove)
-        this.chessboard.addMarker(this.props.markers.lastMove, move.from)
-        this.chessboard.addMarker(this.props.markers.lastMove, move.to)
-        if (move.inCheck || move.inCheckmate) {
-            const tmpChess = new Chess(move.fen)
-            const kingSquare = tmpChess.pieces("k", tmpChess.turn())[0]
-            this.chessboard.addMarker(this.props.markers.check, kingSquare.square)
+        if(move) {
+            this.chessboard.addMarker(this.props.markers.lastMove, move.from)
+            this.chessboard.addMarker(this.props.markers.lastMove, move.to)
+            if (move.inCheck || move.inCheckmate) {
+                const tmpChess = new Chess(move.fen)
+                const kingSquare = tmpChess.pieces("k", tmpChess.turn())[0]
+                this.chessboard.addMarker(this.props.markers.check, kingSquare.square)
+            }
+        } else {
+            const chess = this.props.playfield.state.chess
+            if (chess.inCheck() || chess.inCheckmate()) {
+                const kingSquare = chess.pieces("k", chess.turn())[0]
+                this.chessboard.addMarker(this.props.markers.check, kingSquare.square)
+            }
         }
     }
+
 }
