@@ -55,7 +55,7 @@ export class Playfield extends Extension {
         Object.assign(this.props, props)
         this.messageBroker = new MessageBroker()
         this.chessboard.addExtension(PlayfieldMarkers, {
-            messageBroker: this.messageBroker,
+            playfield: this,
             markers: this.props.markers
         })
         this.chessboard.state.chess = this.state.chess

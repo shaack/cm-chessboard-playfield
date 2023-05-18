@@ -9,10 +9,13 @@ import {PLAYFIELD_MESSAGES} from "../Playfield.js"
 export class PlayfieldMarkers extends Markers {
     constructor(chessboard, props = {}) {
         super(chessboard, props)
-        props.messageBroker.subscribe(PLAYFIELD_MESSAGES.gameMoveIllegal, (data) => {
+        props.playfield.messageBroker.subscribe(PLAYFIELD_MESSAGES.gameMoveIllegal, (data) => {
             this.markIllegalMove(data.from, data.to)
         })
-
+        props.playfield.state.addObserver((event) => {
+           console.log("event", event)
+            this.markLastMove(event.value.from, event.value.to)
+        }, ["moveShown"])
     }
     markIllegalMove(from, to) {
         this.chessboard.removeMarkers(this.props.markers.illegalMove)
@@ -27,6 +30,8 @@ export class PlayfieldMarkers extends Markers {
     }
 
     markLastMove(from, to) {
-
+        this.chessboard.removeMarkers(this.props.markers.lastMove)
+        this.chessboard.addMarker(this.props.markers.lastMove, from)
+        this.chessboard.addMarker(this.props.markers.lastMove, to)
     }
 }
