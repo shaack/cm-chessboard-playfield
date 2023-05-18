@@ -73,7 +73,7 @@ export class Playfield extends Extension {
     }
 
     handleMoveResponse(move) {
-        // console.log("handleMoveResponse", move)
+        console.log("handleMoveResponse", move)
         const moveResult = this.state.chess.move(move)
         if (!moveResult) {
             console.error("illegalMove", this.state.chess, move)
