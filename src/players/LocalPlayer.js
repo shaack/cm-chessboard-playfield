@@ -38,7 +38,7 @@ export class LocalPlayer extends PlayfieldPlayer {
             case INPUT_EVENT_TYPE.validateMoveInput:
                 return this.onValidateMoveInput(event, moveResponse)
             case INPUT_EVENT_TYPE.moveInputFinished:
-                this.onMoveInputFinished(event)
+                this.onMoveInputFinished(event, moveResponse)
         }
     }
 
@@ -57,10 +57,6 @@ export class LocalPlayer extends PlayfieldPlayer {
         const move = {from: event.squareFrom, to: event.squareTo}
         const validMove = !!tmpChess.move(move)
         if (validMove) {
-            moveResponse({
-                from: event.squareFrom,
-                to: event.squareTo
-            })
             return true
         } else { // is a promotion?
             const piece = tmpChess.piece(event.squareFrom)
@@ -84,9 +80,15 @@ export class LocalPlayer extends PlayfieldPlayer {
         }
     }
 
-    onMoveInputFinished(event) {
+    onMoveInputFinished(event, moveResponse) {
         // console.log("onMoveInputFinished", event)
         if (event.legalMove) {
+            if(!this.playfield.chessboard.isPromotionDialogShown()) {
+                moveResponse({
+                    from: event.squareFrom,
+                    to: event.squareTo
+                })
+            }
             this.playfield.chessboard.disableMoveInput()
         }
     }
