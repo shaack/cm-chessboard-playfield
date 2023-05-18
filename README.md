@@ -13,30 +13,4 @@ Work in progress, which is planned to
 
 This will replace many parts of my https://github.com/shaack/chess-console project and make it easier to use.
 
-## API
-
-### props
-
-```
-this.props = {
-    playerColor: COLOR.white,
-    player: {name: "Local Player", type: LocalPlayer},
-    opponent: {name: "Random Player", type: RandomPlayer},
-    markers: {
-        move: MARKER_TYPE.frame,
-        lastMove: MARKER_TYPE.frame,
-        check: MARKER_TYPE.circleDanger,
-        checkMate: MARKER_TYPE.circleDanger,
-        validMove: MARKER_TYPE.dot,
-        validMoveCapture: MARKER_TYPE.bevel
-    },
-    accessibility: {
-        brailleNotationInAlt: true,
-        movePieceForm: true,
-        boardAsTable: true,
-        piecesAsList: true,
-        visuallyHidden: true
-    }
-}
-```
 
