@@ -9,7 +9,7 @@ import {Extension} from "cm-chessboard/src/model/Extension.js"
 import {MARKER_TYPE} from "cm-chessboard/src/extensions/markers/Markers.js"
 import {Observed} from "cm-web-modules/src/observed/Observed.js"
 import {MessageBroker} from "cm-web-modules/src/message-broker/MessageBroker.js"
-import {PlayfieldMarkers} from "./extensions/PlayfieldMarkers.js"
+import {PlayfieldMarkers} from "./components/PlayfieldMarkers.js"
 import {LocalPlayer} from "./players/LocalPlayer.js"
 import {RandomPlayer} from "./players/RandomPlayer.js"
 
@@ -54,10 +54,11 @@ export class Playfield extends Extension {
         })
         Object.assign(this.props, props)
         this.messageBroker = new MessageBroker()
-        this.chessboard.addExtension(PlayfieldMarkers, {
-            playfield: this,
-            markers: this.props.markers
-        })
+        this.components = {
+            markers: new PlayfieldMarkers(this, {
+                markers: this.props.markers
+            })
+        }
         this.chessboard.state.chess = this.state.chess
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)
