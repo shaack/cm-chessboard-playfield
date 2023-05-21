@@ -26,7 +26,6 @@ export class Playfield extends Extension {
             opponent: new this.props.opponent.type(this, this.props.opponent.name)
         })
         Object.assign(this.props, props)
-        this.chessboard.state.chess = this.state.chess
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)
         }, ["moveShown"])
