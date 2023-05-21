@@ -7,6 +7,7 @@ import {MARKER_TYPE, Markers} from "cm-chessboard/src/extensions/markers/Markers
 import {Playfield} from "../Playfield.js"
 import {Chess} from "cm-chess/src/Chess.js"
 import {EXTENSION_POINT} from "cm-chessboard/src/model/Extension.js"
+import {INPUT_EVENT_TYPE} from "cm-chessboard/src/Chessboard.js"
 
 export class PlayfieldMarkers extends Markers {
     constructor(chessboard, props = {}) {
@@ -22,10 +23,29 @@ export class PlayfieldMarkers extends Markers {
                 validMoveCapture: {...MARKER_TYPE.bevel}
             }
         }
+        Object.assign(this.props, props)
         this.playfield = chessboard.getExtension(Playfield)
         this.registerExtensionPoint(EXTENSION_POINT.moveInput, (data) => {
+            if(data.type !== INPUT_EVENT_TYPE.movingOverSquare && data.type !== INPUT_EVENT_TYPE.moveInputFinished) {
+                chessboard.removeMarkers(this.props.markers.validMove)
+                chessboard.removeMarkers(this.props.markers.validMoveCapture)
+            }
             if(data.moveInputCallbackResult === false) {
                 this.markIllegalMove(data.squareFrom, data.squareTo)
+            } else {
+                if(data.type === INPUT_EVENT_TYPE.moveInputStarted) {
+                    const moves = this.playfield.state.chess.moves({square: data.squareFrom, verbose: true})
+                    for (const move of moves) { // draw dots on valid moves
+                        if (move.promotion && move.promotion !== "q") {
+                            continue
+                        }
+                        if (this.playfield.state.chess.piece(move.to)) {
+                            chessboard.addMarker(this.props.markers.validMoveCapture, move.to)
+                        } else {
+                            chessboard.addMarker(this.props.markers.validMove, move.to)
+                        }
+                    }
+                }
             }
         })
         this.playfield.state.addObserver((event) => {
