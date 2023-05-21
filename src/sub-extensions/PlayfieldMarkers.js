@@ -4,14 +4,15 @@
  * License: MIT, see file 'LICENSE'
  */
 import {MARKER_TYPE, Markers} from "cm-chessboard/src/extensions/markers/Markers.js"
-import {Playfield, PLAYFIELD_MESSAGES} from "../Playfield.js"
+import {Playfield} from "../Playfield.js"
 import {Chess} from "cm-chess/src/Chess.js"
+import {EXTENSION_POINT} from "cm-chessboard/src/model/Extension.js"
 
 export class PlayfieldMarkers extends Markers {
     constructor(chessboard, props = {}) {
         super(chessboard, props)
         this.props = {
-            autoMarkers: MARKER_TYPE.frame,
+            autoMarkers: {...MARKER_TYPE.frame},
             markers: {
                 lastMove: {...MARKER_TYPE.frame},
                 check: {...MARKER_TYPE.circleDanger},
@@ -22,9 +23,10 @@ export class PlayfieldMarkers extends Markers {
             }
         }
         this.playfield = chessboard.getExtension(Playfield)
-        console.log("this.playfield", this.playfield)
-        this.playfield.messageBroker.subscribe(PLAYFIELD_MESSAGES.gameMoveIllegal, (data) => {
-            this.markIllegalMove(data.from, data.to)
+        this.registerExtensionPoint(EXTENSION_POINT.moveInput, (data) => {
+            if(data.moveInputCallbackResult === false) {
+                this.markIllegalMove(data.squareFrom, data.squareTo)
+            }
         })
         this.playfield.state.addObserver((event) => {
             this.markLastMove(event.value)
