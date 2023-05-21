@@ -29,6 +29,7 @@
     import {Chessboard} from "cm-chessboard/src/Chessboard.js"
     import {Playfield} from "./src/Playfield.js"
     import {PlayfieldMarkers} from "./src/dependent-extensions/PlayfieldMarkers.js"
+    import {PlayfieldSounds} from "./src/dependent-extensions/PlayfieldSounds.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
         position: "7k/1P6/8/b7/6r1/8/pp2PPPP/2R1KBNR w - - 0 1", // "4k3/1P6/8/8/6r1/8/pp2PPPP/2R1KBNR w K - 0 1",
@@ -38,7 +39,8 @@
         },
         extensions: [
             {class: Playfield},
-            {class: PlayfieldMarkers}
+            {class: PlayfieldMarkers},
+            {class: PlayfieldSounds},
         ]
     })
 
