@@ -14,33 +14,39 @@
 <h1>The Playfield extension for cm-chessboard</h1>
 <div id="chessboard"></div>
 <script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.7.2/dist/es-module-shims.min.js"></script>
+<!-- @formatter:off -->
 <script type="importmap">
     {
         "imports": {
             "cm-chessboard/": "./node_modules/cm-chessboard/",
-            "cm-chess/": "./node_modules/cm-chess/",
-            "cm-pgn/": "./node_modules/cm-pgn/",
+            "cm-web-modules/": "./node_modules/cm-web-modules/",
             "chess.mjs/": "./node_modules/chess.mjs/",
-            "cm-web-modules/": "./node_modules/cm-web-modules/"
+            "cm-pgn/": "./node_modules/cm-pgn/",
+            "cm-chess/": "./node_modules/cm-chess/"
         }
     }
 </script>
+<!-- @formatter:on -->
 <script type="module">
     import {Chessboard} from "cm-chessboard/src/Chessboard.js"
     import {Playfield} from "./src/Playfield.js"
     import {PlayfieldMarkers} from "./src/dependent-extensions/PlayfieldMarkers.js"
     import {PlayfieldSounds} from "./src/dependent-extensions/PlayfieldSounds.js"
+    import {LocalPlayer} from "./src/players/LocalPlayer.js"
+    import {RandomPlayer} from "./src/players/RandomPlayer.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
         position: "7k/1P6/8/b7/6r1/8/pp2PPPP/2R1KBNR w - - 0 1", // "4k3/1P6/8/8/6r1/8/pp2PPPP/2R1KBNR w K - 0 1",
         assetsUrl: "node_modules/cm-chessboard/assets/",
-        style: {
-            animationDuration: 300
-        },
         extensions: [
-            {class: Playfield},
+            {
+                class: Playfield, props: {
+                    player: {name: "Local Player", type: LocalPlayer},
+                    opponent: {name: "Random Player", type: RandomPlayer},
+                }
+            },
             {class: PlayfieldMarkers},
-            {class: PlayfieldSounds},
+            {class: PlayfieldSounds}
         ]
     })
 

@@ -10,10 +10,8 @@ import {PlayfieldPlayer} from "./PlayfieldPlayer.js"
 
 export class LocalPlayer extends PlayfieldPlayer {
 
-    constructor(playfield, name, props) {
+    constructor(playfield, name) {
         super(playfield, name)
-        this.props = {}
-        Object.assign(this.props, props)
         if (!this.playfield.chessboard.getExtension(PromotionDialog)) {
             this.playfield.chessboard.addExtension(PromotionDialog)
         }
@@ -26,11 +24,14 @@ export class LocalPlayer extends PlayfieldPlayer {
     moveRequest(moveResponse) {
         this.playfield.chessboard.enableMoveInput((event) => {
             return this.chessboardMoveInputCallback(event, moveResponse)
-        }, this.playfield.state.chess.turn())
+        }, this.playfield.props.playerColor)
+    }
+
+    handleMoveResponse(moveResponse, move) {
+        moveResponse(move)
     }
 
     chessboardMoveInputCallback(event, moveResponse) {
-        // console.log("chessboardMoveInputCallback", event)
         switch (event.type) {
             case INPUT_EVENT_TYPE.moveInputStarted:
                 return this.onMoveInputStarted(event)
@@ -60,13 +61,14 @@ export class LocalPlayer extends PlayfieldPlayer {
                 const possibleMoves = tmpChess.moves({square: event.squareFrom, verbose: true})
                 for (let possibleMove of possibleMoves) {
                     if (possibleMove.to === event.squareTo && possibleMove.promotion) {
-                        this.playfield.chessboard.showPromotionDialog(event.squareTo, tmpChess.turn(), (dialogEvent) => {
+                        this.playfield.chessboard.showPromotionDialog(event.squareTo, this.playfield.props.playerColor, (dialogEvent) => {
                             if (!dialogEvent) {
+                                // promotion cancelled, reset the position
                                 this.playfield.chessboard.setPosition(this.playfield.state.chess.fen(), true)
                                 this.moveRequest(moveResponse)
                             } else if (dialogEvent.piece) {
                                 move.promotion = dialogEvent.piece.charAt(1)
-                                moveResponse(tmpChess.move(move))
+                                this.handleMoveResponse(moveResponse, tmpChess.move(move))
                             }
                         })
                         return true
@@ -82,7 +84,7 @@ export class LocalPlayer extends PlayfieldPlayer {
         // console.log("onMoveInputFinished", event)
         if (event.legalMove) {
             if (!this.playfield.chessboard.isPromotionDialogShown()) {
-                moveResponse({
+                this.handleMoveResponse(moveResponse,{
                     from: event.squareFrom,
                     to: event.squareTo
                 })
@@ -90,5 +92,4 @@ export class LocalPlayer extends PlayfieldPlayer {
             this.playfield.chessboard.disableMoveInput()
         }
     }
-
 }

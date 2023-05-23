@@ -7,8 +7,6 @@ import {Chess} from "cm-chess/src/Chess.js"
 import {COLOR} from "cm-chessboard/src/Chessboard.js"
 import {Extension} from "cm-chessboard/src/model/Extension.js"
 import {Observed} from "cm-web-modules/src/observed/Observed.js"
-import {LocalPlayer} from "./players/LocalPlayer.js"
-import {RandomPlayer} from "./players/RandomPlayer.js"
 
 export class Playfield extends Extension {
 
@@ -16,16 +14,16 @@ export class Playfield extends Extension {
         super(chessboard)
         this.props = {
             playerColor: COLOR.white,
-            player: {name: "Local Player", type: LocalPlayer},
-            opponent: {name: "Random Player", type: RandomPlayer}
+            player: undefined,
+            opponent: undefined
         }
+        Object.assign(this.props, props)
         this.state = new Observed({
             chess: new Chess(chessboard.props.position),
             moveShown: null,
-            player: new this.props.player.type(this, this.props.player.name),
-            opponent: new this.props.opponent.type(this, this.props.opponent.name)
+            player: new this.props.player.type(this, this.props.player.name, this.props.player.props),
+            opponent: new this.props.opponent.type(this, this.props.opponent.name, this.props.opponent.props)
         })
-        Object.assign(this.props, props)
         this.state.addObserver(() => {
             this.chessboard.setPosition(this.state.moveShown.fen, true)
         }, ["moveShown"])
