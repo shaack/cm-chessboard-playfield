@@ -29,7 +29,6 @@ export class LocalPlayer extends PlayfieldPlayer {
 
     handleMoveResponse(moveResponse, move) {
         moveResponse(move)
-        this.playfield.chessboard.disableMoveInput()
     }
 
     chessboardMoveInputCallback(event, moveResponse) {
@@ -66,7 +65,6 @@ export class LocalPlayer extends PlayfieldPlayer {
                             if (!dialogEvent) {
                                 // promotion cancelled, reset the position
                                 this.playfield.chessboard.setPosition(this.playfield.state.chess.fen(), true)
-                                this.playfield.chessboard.disableMoveInput()
                                 this.moveRequest(moveResponse)
                             } else if (dialogEvent.piece) {
                                 move.promotion = dialogEvent.piece.charAt(1)
@@ -90,6 +88,7 @@ export class LocalPlayer extends PlayfieldPlayer {
                     to: event.squareTo
                 })
             }
+            this.playfield.chessboard.disableMoveInput()
         }
     }
 }
