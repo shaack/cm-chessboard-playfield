@@ -55,7 +55,11 @@ export class PlayfieldSounds extends Extension {
             if((event.type === INPUT_EVENT_TYPE.validateMoveInput ||
                 event.type === INPUT_EVENT_TYPE.moveInputStarted)
                 && !event.moveInputCallbackResult) {
-                this.audioSprite.play("illegal_move")
+                if(this.playfield.state.player.state.premoving) {
+                    // todo play premove sound
+                } else {
+                    this.audioSprite.play("illegal_move")
+                }
             }
         })
     }

@@ -27,6 +27,7 @@ export class LocalPlayer extends PlayfieldPlayer {
         }, this.playfield.props.playerColor)
     }
 
+    // todo can be removed
     handleMoveResponse(moveResponse, move) {
         moveResponse(move)
     }

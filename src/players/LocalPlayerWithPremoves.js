@@ -5,6 +5,7 @@
  */
 import {LocalPlayer} from "./LocalPlayer.js"
 import {Observed} from "cm-web-modules/src/observed/Observed.js"
+import {Chess} from "cm-chess/src/Chess.js"
 
 export class LocalPlayerWithPremoves extends LocalPlayer {
     constructor(playfield, name) {
@@ -16,20 +17,33 @@ export class LocalPlayerWithPremoves extends LocalPlayer {
         this.state.addObserver((event) => {
             console.log("state", event)
         })
+        this.state.addObserver((event) => {
+            this.playfield.chessboard.removePremoveMarkers()
+            if(event.value) {
+                this.playfield.chessboard.addPremoveMarker(event.value.squareFrom)
+                this.playfield.chessboard.addPremoveMarker(event.value.squareTo)
+            }
+        }, ["premoveValidateEvent"])
     }
 
     moveRequest(moveResponse) {
         this.state.premoving = false
-        if(!this.playfield.chessboard.view.moveInputCallback) { // if not enabled
+        if(!this.playfield.chessboard.view.moveInputCallback) { // enable it only once on first request
             this.playfield.chessboard.enableMoveInput((event) => {
                 return this.chessboardMoveInputCallback(event, moveResponse)
             }, this.playfield.props.playerColor)
         }
         if(this.state.premoveValidateEvent) {
-            moveResponse({
-                from: this.state.premoveValidateEvent.squareFrom,
-                to: this.state.premoveValidateEvent.squareTo
-            })
+            const tmpChess = new Chess(this.playfield.state.chess.fen())
+            const move = {from: this.state.premoveValidateEvent.squareFrom, to: this.state.premoveValidateEvent.squareTo}
+            const validMove = !!tmpChess.move(move)
+            if(validMove) {
+                moveResponse({
+                    from: this.state.premoveValidateEvent.squareFrom,
+                    to: this.state.premoveValidateEvent.squareTo
+                })
+                this.state.premoving = true
+            }
             this.state.premoveValidateEvent = null
         }
     }
@@ -45,7 +59,7 @@ export class LocalPlayerWithPremoves extends LocalPlayer {
     onValidateMoveInput(chessboardEvent, moveResponse) {
         if(this.state.premoving) {
             this.state.premoveValidateEvent = chessboardEvent
-            return true // no validation when premoving, todo show promotion dialog, if needed
+            return false // no validation when premoving, todo show promotion dialog, if needed
         } else {
             return super.onValidateMoveInput(chessboardEvent, moveResponse)
         }
@@ -61,6 +75,10 @@ export class LocalPlayerWithPremoves extends LocalPlayer {
             }
             if(!this.state.premoving) {
                 this.state.premoving = true
+            }
+        } else {
+            if(this.state.premoveValidateEvent) {
+                this.playfield.chessboard.setPosition(this.playfield.state.chess.fen())
             }
         }
     }

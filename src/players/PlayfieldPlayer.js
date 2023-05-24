@@ -12,6 +12,7 @@ export class PlayfieldPlayer {
         }
         this.playfield = playfield
         this.name = name
+        this.state = {}
     }
 
     /**

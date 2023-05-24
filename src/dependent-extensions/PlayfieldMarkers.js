@@ -20,7 +20,8 @@ export class PlayfieldMarkers extends Markers {
                 checkMate: {...MARKER_TYPE.circleDanger},
                 illegalMove: {...MARKER_TYPE.frameDanger},
                 validMove: {...MARKER_TYPE.dot},
-                validMoveCapture: {...MARKER_TYPE.bevel}
+                validMoveCapture: {...MARKER_TYPE.bevel},
+                premove: {...MARKER_TYPE.framePrimary}
             }
         }
         Object.assign(this.props, props)
@@ -48,12 +49,21 @@ export class PlayfieldMarkers extends Markers {
                 }
             }
         })
+        this.chessboard.addPremoveMarker = (square) => {
+            this.chessboard.addMarker(this.props.markers.premove, square)
+        }
+        this.chessboard.removePremoveMarkers = () => {
+            this.chessboard.removeMarkers(this.props.markers.premove)
+        }
         this.playfield.state.addObserver((event) => {
             this.markLastMove(event.value)
         }, ["moveShown"])
         this.markLastMove(this.playfield.state.moveShown)
     }
     markIllegalMove(from, to) {
+        if(this.playfield.state.player.state.premoving) {
+            return
+        }
         this.chessboard.removeMarkers(this.props.markers.illegalMove)
         clearTimeout(this.removeMarkersTimeout)
         this.chessboard.addMarker(this.props.markers.illegalMove, from)
