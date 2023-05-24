@@ -1,8 +1,9 @@
 {
-  "name": "cm-chessboard-game-of-chess",
+  "name": "cm-chessboard-playfield",
   "version": "1.0.2",
-  "description": "A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square marking.",
-  "main": "index.js",
+  "description": "A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and does some fancy square marking.",
+  "type": "module",
+  "module": "./src/Playfield.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
