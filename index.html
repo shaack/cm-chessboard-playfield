@@ -42,8 +42,8 @@
         extensions: [
             {
                 class: Playfield, props: {
-                    player: {name: "Local Player", type: LocalPlayer},
-                    opponent: {name: "Random Player", type: RandomPlayer},
+                    player: {name: "Local Player", type: LocalPlayerWithPremoves},
+                    opponent: {name: "Random Player", type: RandomPlayer, props: {delay: 2000}}
                 }
             },
             {class: PlayfieldMarkers},
