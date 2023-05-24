@@ -1,6 +1,6 @@
 {
   "name": "cm-chessboard-game-of-chess",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A cm-chessboard plugin which knows the rules of chess to validate moves, support promotions and do some fancy square marking.",
   "main": "index.js",
   "scripts": {
