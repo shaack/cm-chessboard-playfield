@@ -75,7 +75,7 @@ export class LocalPlayer extends PlayfieldPlayer {
                     }
                 }
             }
-            // it is not a promotion, it is an illegal move
+            // it's not a promotion, it is an illegal move
             return false
         }
     }
