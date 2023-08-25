@@ -9,7 +9,7 @@ Work in progress, all features are implemented for now, beside the premoves
 - set markers for last move, check, invalid move, legal moves etc. ✅
 - display a promotion dialog, if needed ✅
 - add sounds ✅
-- allow premoves (TODO)
+- allow premoves ✅
 
 This will replace many parts of my https://github.com/shaack/chess-console project and make it easier to use.
 
