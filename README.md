@@ -1,6 +1,6 @@
 # cm-chessboard-playfield
 
-A cm-chessboard exte4nsion which knows the rules of chess to validate moves, support promotions and does some fancy square marking. This is the cm-chessboard extension which has it all to play chess.
+A cm-chessboard extension which knows the rules of chess to validate moves, support promotions and does some fancy square marking.
 
 Work in progress, all features are implemented for now. It's also in use in production at https://www.chessmail.eu and https://www.chessmail.de
 
