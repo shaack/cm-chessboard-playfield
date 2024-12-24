@@ -2,6 +2,8 @@
 
 A cm-chessboard extension which knows the rules of chess to validate moves, support promotions and does some fancy square marking.
 
+[See the demo page](https://shaack.com/projekte/cm-chessboard-playfield/)
+
 Work in progress, all features are implemented for now. It's also in use in production at https://www.chessmail.eu and https://www.chessmail.de
 
 - do move validation ✅
