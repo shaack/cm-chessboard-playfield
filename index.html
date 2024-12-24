@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>The Playfield extension for cm-chessboard</h1>
-<div id="chessboard"></div>
+<div id="chessboard" style="max-width: 600px; margin: 0 auto"></div>
 <script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.7.2/dist/es-module-shims.min.js"></script>
 <!-- @formatter:off -->
 <script type="importmap">
@@ -36,7 +36,7 @@
     import {LocalPlayerWithPremoves} from "./src/players/LocalPlayerWithPremoves.js"
 
     const chessboard = new Chessboard(document.getElementById("chessboard"), {
-        position: "7k/1P6/8/b7/6r1/8/pp2PPPP/2R1KBNR w - - 0 1", // "4k3/1P6/8/8/6r1/8/pp2PPPP/2R1KBNR w K - 0 1",
+        position: "4k3/1P6/8/8/6r1/8/pp2PPPP/2R1KBNR w K - 0 1", // "7k/1P6/8/b7/6r1/8/pp2PPPP/2R1KBNR w - - 0 1"
         assetsUrl: "node_modules/cm-chessboard/assets/",
         extensions: [
             {
